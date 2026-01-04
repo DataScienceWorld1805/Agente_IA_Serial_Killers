@@ -2,68 +2,48 @@
 
 Sistema RAG (Retrieval-Augmented Generation) profesional y escalable para consultar información sobre asesinos seriales desde documentos PDF. Construido con LangChain, LangGraph, ChromaDB y Groq.
 
-## Características
+## 🎯 Características
 
-- **Procesamiento de PDFs**: Carga y extracción automática de texto de múltiples documentos PDF
-- **Búsqueda Semántica**: Sistema de embeddings multilengua gratuito con ChromaDB
-- **Memoria Conversacional**: LangGraph para mantener contexto y reutilizar información del prompt
-- **Interfaz Gráfica**: UI moderna y académica integrada en Jupyter Notebook
-- **Integración Groq**: LLM rápido y eficiente para generación de respuestas
+- **Procesamiento Inteligente de PDFs**: Carga y extracción automática de texto de múltiples documentos PDF con detección automática de archivos nuevos
+- **Búsqueda Semántica**: Sistema de embeddings multilengua gratuito con ChromaDB para recuperación precisa de información
+- **Memoria Conversacional**: LangGraph para orquestar el flujo RAG y gestionar el estado de las conversaciones
+- **Interfaz Gráfica Moderna**: UI elegante y académica integrada en Jupyter Notebook con diseño profesional
+- **Integración Groq**: LLM rápido y eficiente (Llama 3.3 70B) para generación de respuestas de alta calidad
+- **Persistencia de Datos**: Base de datos vectorial persistente que evita reprocesamiento innecesario
 
-## Requisitos
+## 📋 Requisitos
 
 - Python 3.8 o superior
 - API Key de Groq (obtener en [groq.com](https://groq.com))
+- Jupyter Notebook o JupyterLab (incluido en las dependencias)
 
-## Instalación
+## 🚀 Instalación
 
-### Opción 1: Instalación Local
+### 1. Clonar o descargar el repositorio
 
-1. Clonar o descargar el repositorio
-2. Instalar las dependencias:
+```bash
+git clone <url-del-repositorio>
+cd RAG_Agente_Serial_Killers
+```
+
+### 2. Instalar las dependencias
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Configurar la API Key de Groq en el notebook (se puede ingresar directamente o usar variables de entorno)
+### 3. Configurar la API Key de Groq
 
-### Opción 2: Instalación con Docker (Recomendado)
-
-1. **Crear archivo `.env`** con tu API Key de Groq:
+Crear un archivo `.env` en la raíz del proyecto:
 
 ```bash
-# Crear archivo .env en la raíz del proyecto
+# Crear archivo .env
 GROQ_API_KEY=tu-api-key-de-groq-aqui
-JUPYTER_TOKEN=  # Opcional: dejar vacío para acceso sin token
 ```
 
-2. **Construir y ejecutar con Docker Compose**:
+**Nota**: También puedes configurar la API key como variable de entorno del sistema, o ingresarla directamente en el notebook.
 
-```bash
-# Construir la imagen
-docker-compose build
-
-# Iniciar el contenedor
-docker-compose up -d
-
-# Ver los logs
-docker-compose logs -f
-```
-
-3. **Acceder a Jupyter Lab**:
-   - Abre tu navegador en: `http://localhost:8888`
-   - Si configuraste un token, úsalo para acceder
-
-4. **Detener el contenedor**:
-
-```bash
-docker-compose down
-```
-
-**Nota**: Los directorios `pdfs/` y `chroma_db/` se montan como volúmenes, por lo que los datos persisten entre reinicios del contenedor.
-
-## Estructura del Proyecto
+## 📁 Estructura del Proyecto
 
 ```
 RAG_Agente_Serial_Killers/
@@ -71,42 +51,111 @@ RAG_Agente_Serial_Killers/
 ├── RAG_Agente_Serial_Killers.ipynb  # Notebook principal con todo el sistema
 ├── requirements.txt                  # Dependencias del proyecto
 ├── README.md                         # Este archivo
-├── Dockerfile                        # Configuración de Docker
-├── docker-compose.yml                # Configuración de Docker Compose
-├── .dockerignore                     # Archivos a ignorar en Docker
 ├── .env                              # Variables de entorno (crear manualmente)
-├── pdfs/                             # Directorio para colocar los PDFs (crear manualmente)
+├── pdfs/                             # Directorio para colocar los PDFs
+│   └── *.pdf                         # Archivos PDF a procesar
 └── chroma_db/                        # Base de datos vectorial (se crea automáticamente)
+    ├── chroma.sqlite3                # Base de datos SQLite de ChromaDB
+    └── [UUID]/                        # Índices vectoriales
 ```
 
-## Uso
+## 💻 Uso
 
-1. Abrir el notebook `RAG_Agente_Serial_Killers.ipynb` en Jupyter
-2. Colocar los PDFs en un directorio (por defecto: `pdfs/`)
-3. Ejecutar todas las celdas del notebook en orden
-4. La primera vez, el sistema procesará los PDFs y creará la base de datos vectorial
-5. Usar la interfaz gráfica para hacer consultas sobre los documentos
+### Inicialización
 
-## Componentes Técnicos
+1. **Abrir el notebook**: Abre `RAG_Agente_Serial_Killers.ipynb` en Jupyter Notebook o JupyterLab
 
-- **LangChain**: Framework RAG principal
-- **LangGraph**: Gestión de estado y flujo del agente
-- **ChromaDB**: Base de datos vectorial para almacenar embeddings
+2. **Colocar PDFs**: Coloca los archivos PDF en el directorio `pdfs/` (se crea automáticamente si no existe)
+
+3. **Configurar API Key**: Asegúrate de tener configurada tu `GROQ_API_KEY` en el archivo `.env` o como variable de entorno
+
+4. **Ejecutar celdas**: Ejecuta todas las celdas del notebook en orden:
+   - Las primeras celdas configuran el sistema y cargan dependencias
+   - La celda de "Procesamiento de PDFs" detecta y procesa automáticamente los PDFs nuevos
+   - Las últimas celdas inicializan la interfaz gráfica
+
+### Procesamiento de PDFs
+
+El sistema incluye **detección automática de PDFs nuevos**:
+- La primera vez procesa todos los PDFs en el directorio `pdfs/`
+- En ejecuciones posteriores, detecta automáticamente PDFs nuevos y solo procesa esos
+- La base de datos vectorial se actualiza incrementalmente sin perder datos previos
+- Para agregar nuevos PDFs, simplemente colócalos en `pdfs/` y ejecuta la celda de procesamiento
+
+### Consultas
+
+Una vez inicializado el sistema:
+
+1. **Usar la interfaz gráfica**: Se muestra automáticamente después de ejecutar todas las celdas
+2. **Ingresar consultas**: Escribe tu pregunta en el campo de texto (ej: "¿Quién fue Ted Bundy?")
+3. **Obtener respuestas**: El sistema busca información relevante y genera una respuesta académica
+4. **Ver historial**: El historial de conversación se muestra debajo de las respuestas
+
+## 🔧 Configuración Técnica
+
+### Parámetros Principales
+
+El sistema está configurado con los siguientes parámetros (editables en el notebook):
+
+- **Chunk Size**: 1000 caracteres
+- **Chunk Overlap**: 200 caracteres
+- **Documentos Recuperados**: 5 documentos por consulta
+- **Temperatura LLM**: 0.3 (para respuestas más precisas y deterministas)
+
+### Modelos Utilizados
+
+- **Embeddings**: `paraphrase-multilingual-MiniLM-L12-v2`
+  - Modelo multilengua gratuito
+  - Soporta español, inglés y otros idiomas
+  - Se descarga automáticamente la primera vez (puede tardar varios minutos)
+
+- **LLM**: `llama-3.3-70b-versatile` (Groq)
+  - Modelo principal configurado
+  - Otros modelos disponibles: `llama-3.1-8b-instant`, `mixtral-8x7b-32768`, `gemma-7b-it`
+  - Configurable en el notebook cambiando `GROQ_MODEL`
+
+## 🏗️ Componentes Técnicos
+
+- **LangChain**: Framework RAG principal para orquestar el pipeline
+- **LangGraph**: Gestión de estado y flujo del agente con grafo de estados
+- **ChromaDB**: Base de datos vectorial para almacenar y buscar embeddings
 - **Sentence-Transformers**: Modelos de embeddings multilengua gratuitos
-- **Groq**: LLM para generación de respuestas
-- **ipywidgets**: Interfaz gráfica interactiva
+- **Groq**: API de LLM para generación rápida de respuestas
+- **ipywidgets**: Interfaz gráfica interactiva en Jupyter
+- **PyPDF**: Procesamiento y extracción de texto de archivos PDF
 
-## Modelos Utilizados
+## 📊 Flujo del Sistema
 
-- **Embeddings**: `paraphrase-multilingual-MiniLM-L12-v2` (multilengua, gratuito)
-- **LLM**: Groq (configurable en el notebook)
+1. **Carga de PDFs**: Los PDFs se cargan y se dividen en chunks con overlap
+2. **Generación de Embeddings**: Cada chunk se convierte en un vector usando el modelo de embeddings
+3. **Almacenamiento**: Los embeddings se almacenan en ChromaDB con metadatos
+4. **Consulta del Usuario**: El usuario ingresa una pregunta a través de la interfaz
+5. **Recuperación**: Se buscan los documentos más relevantes usando búsqueda semántica
+6. **Generación**: El LLM genera una respuesta basada en el contexto recuperado
+7. **Visualización**: La respuesta se muestra en la interfaz con formato markdown
 
-## Notas
+## ⚙️ Arquitectura LangGraph
 
-- Los modelos de embeddings se descargan automáticamente la primera vez (puede tardar algunos minutos)
-- La base de datos vectorial se persiste en disco para evitar reprocesamiento
-- El sistema mantiene memoria conversacional entre consultas
+El sistema utiliza LangGraph para orquestar el flujo RAG:
 
-## Licencia
+- **Estado del Grafo**: Mantiene mensajes, contexto y pregunta actual
+- **Nodo de Recuperación**: Busca documentos relevantes en ChromaDB
+- **Nodo de Generación**: Genera la respuesta usando Groq con el contexto recuperado
+- **Flujo**: `retrieve → generate → END`
+
+## 📝 Notas Importantes
+
+- **Primera Ejecución**: La primera vez que ejecutes el sistema, el modelo de embeddings se descargará automáticamente (puede tardar varios minutos dependiendo de tu conexión)
+- **Persistencia**: La base de datos vectorial se guarda en `chroma_db/` y persiste entre sesiones
+- **Agregar PDFs**: Para agregar nuevos PDFs, simplemente colócalos en `pdfs/` y ejecuta la celda de procesamiento
+- **Memoria**: El sistema mantiene un historial de conversación durante la sesión actual
+- **API Key**: Asegúrate de tener una API key válida de Groq (hay límites de uso gratuitos)
+
+## 📄 Licencia
 
 Este proyecto es de uso educativo y de investigación.
+
+## 🙏 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor, abre un issue o pull request si deseas mejorar el proyecto.
+
