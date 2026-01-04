@@ -158,4 +158,3 @@ Este proyecto es de uso educativo y de investigación.
 ## 🙏 Contribuciones
 
 Las contribuciones son bienvenidas. Por favor, abre un issue o pull request si deseas mejorar el proyecto.
-
