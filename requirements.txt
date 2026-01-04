@@ -1,0 +1,32 @@
+# RAG Sistema Agente de Asesinos Seriales
+# Dependencias del proyecto
+
+# Framework RAG y LangGraph
+langchain>=0.1.0
+langchain-community>=0.0.20
+langchain-core>=0.1.0
+langchain-text-splitters>=0.0.1
+langgraph>=0.0.20
+
+# Base de datos vectorial
+chromadb>=0.4.22
+
+# Cliente Groq
+langchain-groq>=1.0.0
+
+# Procesamiento de PDFs
+pypdf>=3.17.0
+
+# Embeddings multilengua gratuitos
+sentence-transformers>=2.2.2
+torch>=2.0.0
+
+# Interfaz gráfica
+ipywidgets>=8.1.0
+ipython>=8.12.0
+
+# Utilidades
+python-dotenv>=1.0.0
+
+# Dependencias adicionales para LangChain
+tiktoken>=0.5.0
